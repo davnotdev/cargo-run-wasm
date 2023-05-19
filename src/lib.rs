@@ -154,9 +154,9 @@ Remove one flag or the other to continue."#
 /// The css argument will be included directly into a `<style type="text/css"></style>` element in the generated page.
 /// By default the body element will include some margin, so for full page apps you will want to remove that by calling like:
 /// ```no_run
-///     cargo_run_wasm::run_wasm_with_css("body { margin: 0px; }");
+///     cargo_run_wasm::run_wasm("body { margin: 0px; }");
 /// ```
-pub fn run_wasm_with_css(css: &str) {
+pub fn run_wasm(body: &str, css: &str) {
     // validate css
     //
     // Someone could easily get around this with some extra spaces
@@ -265,7 +265,8 @@ pub fn run_wasm_with_css(css: &str) {
     let index_processed = index_template
         .replace("{{name}}", &args.binary_name)
         // This is fine because a replaced {{name}} cant contain `{{css}} ` due to `{` not being valid in a crate name
-        .replace("{{css}}", css);
+        .replace("{{css}}", css)
+        .replace("{{body}}", body);
     std::fs::write(example_dest.join("index.html"), index_processed).unwrap();
 
     if !args.build_only {
